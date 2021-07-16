@@ -4,6 +4,8 @@
 
 ### Done in Vuejs, Vuex(state management) and Firebase
 
+### Hosted here-> https://vercel.com/espiramarvin/touch-inspiration
+
 ## Install the dependencies
 ```bash
 yarn / yarn install
