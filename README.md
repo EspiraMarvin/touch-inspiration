@@ -1,4 +1,6 @@
-#Touch Inspiration App
+# Touch Inspiration App
+
+### consumes https://ti-react-test.herokuapp.com/users api
 
 ### Done in Vuejs, Vuex and Firebase
 
