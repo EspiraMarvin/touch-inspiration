@@ -2,11 +2,11 @@
 
 ### consumes https://ti-react-test.herokuapp.com/users api
 
-### Done in Vuejs, Vuex and Firebase
+### Done in Vuejs, Vuex(state management) and Firebase
 
 ## Install the dependencies
 ```bash
-yarn / yarn instal
+yarn / yarn install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
