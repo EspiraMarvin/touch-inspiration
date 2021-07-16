@@ -90,30 +90,26 @@ export default {
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
       .then(result => {
-        console.log('result', result)
         this.notify('Sign In Success', 'check_circle', 'green-5')
         this.$router.push('/home')
       })
-      .catch(error => console.log('error',error))
+      .catch(error => error)
     },
     signInExistingUser (email, password) {
-      console.log(email, password)
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           this.notify('Sign In Success', 'check_circle', 'green-5')
           this.$router.push('/home')
         })
-        .catch(error => { console.log(error)})
+        .catch(error => error)
     },
     createUser(email, password) {
-      console.log(email, password)
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(auth => {
-          this.notify('Sign In Success', 'check_circle', 'green-5')
+          this.notify('Sign In Success', 'check_circle', 'blue-5')
           this.$router.push('/home')
         })
-        .catch(error => {console.log(error)
-        })
+        .catch(error => error)
     },
     forgotPassword () {
       this.resetPwdDialog = true
