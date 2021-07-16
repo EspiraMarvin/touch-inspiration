@@ -28,19 +28,31 @@
         outlined
         class="q-mb-md"
         type="email"
-        label="Email" />
+        label="Email"
+        :rules="[val => (val && val.length > 0) || 'Please enter email', isValidEmail]"
+      />
       <q-input
         v-model="formData.password"
+        :type="isPwd ? 'password' : 'text'"
         outlined
         class="q-mb-md"
-        type="password"
-        label="Password" />
+        :rules="[val => (val && val.length > 0) || 'Please enter password', hasWhiteSpacesOnly]"
+        label="Password">
+        <template v-slot:append>
+          <q-icon
+            :name="isPwd ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @click="isPwd = !isPwd"
+          />
+        </template>
+      </q-input>
       <div class="row">
         <q-space />
         <q-btn
           type="submit"
           color="primary"
           :label="tab"
+          :disable="isDisabled"
         />
       </div>
     </q-form>
@@ -61,16 +73,18 @@
 </template>
 
 <script>
-import firebase from "firebase";
+// import firebase from "firebase";
+import firebase from 'src/boot/firebase'
 import ForgotPassword from "components/ForgotPassword";
 import mixins from "src/mixins/mixins";
 export default {
   name: "AuthComponent",
   props: ['tab'],
-  mixins: [ mixins ],
-  components: { ForgotPassword },
-  data (){
+  mixins: [mixins],
+  components: {ForgotPassword},
+  data() {
     return {
+      isPwd: true,
       formData: {
         email: 'marvin@gmail.com',
         password: '12345678'
@@ -78,40 +92,49 @@ export default {
       resetPwdDialog: false
     }
   },
+  computed: {
+    isDisabled() {
+      return !this.formData.email.replace(/\s/g, '').length
+        || !this.formData.password.replace(/\s/g, '').length
+        || this.isValidEmail(this.formData.email) === 'Invalid email'
+    }
+  },
   methods: {
-    submitForm () {
+    submitForm() {
       if (this.tab === 'login') {
         this.signInExistingUser(this.formData.email, this.formData.password)
       } else {
         this.createUser(this.formData.email, this.formData.password)
       }
     },
-    google () {
+    google() {
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
-      .then(result => {
-        this.notify('Sign In Success', 'check_circle', 'green-5')
-        this.$router.push('/home')
-      })
-      .catch(error => error)
+        .then(result => {
+          this.notify('Sign In Success', 'check_circle', 'green-5')
+          this.$router.push('/home')
+        })
+        .catch(error => this.notify(error.message, 'warning', 'red-5'))
     },
-    signInExistingUser (email, password) {
+    signInExistingUser(email, password) {
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           this.notify('Sign In Success', 'check_circle', 'green-5')
           this.$router.push('/home')
         })
-        .catch(error => error)
+        .catch(error => {
+          this.notify(error.message, 'warning', 'red-5')
+        })
     },
     createUser(email, password) {
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(auth => {
-          this.notify('Sign In Success', 'check_circle', 'blue-5')
+          this.notify('Sign In Success', 'check_circle', 'green-5')
           this.$router.push('/home')
         })
-        .catch(error => error)
+        .catch(error => this.notify(error.message, 'warning', 'red-5'))
     },
-    forgotPassword () {
+    forgotPassword() {
       this.resetPwdDialog = true
     }
   }

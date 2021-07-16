@@ -34,9 +34,13 @@
 </template>
 
 <script>
-import firebase from "firebase";
+// import firebase from "firebase";
+// import firebase from "firebase/app";
+import firebase from "firebase/app";
+import mixins from "src/mixins/mixins";
 export default {
   name: "ForgotPassword",
+  mixins: [ mixins ],
   data (){
     return {
       form: {
@@ -49,9 +53,11 @@ export default {
       firebase.auth().sendPasswordResetEmail(this.form.email)
         .then(() => {
           this.form = {}
-          this.$q.notify({message: 'Check you email and reset your password.'})
+          this.notify( 'Check you email and reset your password.','check_circle', 'green-5')
         })
-        .catch(error => { console.log(error)})
+        .catch(error => {
+          this.notify(error.message, 'warning', 'red-5')
+        })
     }
   }
 }

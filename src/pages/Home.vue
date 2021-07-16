@@ -99,7 +99,7 @@
                   type="text" hint="Occupation"
                   :disable="viewing"
                   lazy-rules
-                  :rules="[val => (val && val.length > 0) || 'Please enter company name', hasWhiteSpacesOnly]"
+                  :rules="[val => (val && val.length > 0) || 'Please enter occupation', hasWhiteSpacesOnly]"
                 />
               </div>
               <div class="col-md-6 col-xs-12 q-pa-md">
@@ -110,7 +110,7 @@
                   type="text" hint="Bio"
                   :disable="viewing"
                   lazy-rules
-                  :rules="[val => (val && val.length > 0) || 'Please enter role', hasWhiteSpacesOnly]"
+                  :rules="[val => (val && val.length > 0) || 'Please enter bio', hasWhiteSpacesOnly]"
                 />
                 <q-input
                   standard
