@@ -4,7 +4,7 @@
 
 ### Done in Vuejs, Vuex(state management) and Firebase
 
-### Hosted here-> https://vercel.com/espiramarvin/touch-inspiration
+### Hosted here-> https://touch-inspiration.vercel.app/
 
 ## Install the dependencies
 ```bash
