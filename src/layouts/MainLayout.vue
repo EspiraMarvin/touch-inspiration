@@ -7,7 +7,7 @@
         </q-toolbar-title>
         <q-btn-dropdown stretch flat>
           <template #label>
-            <p class="q-mx-md" style="margin-bottom: -1px">{{ email }}</p>
+            <p class="q-mx-md gt-sm" style="margin-bottom: -1px">{{ email }}</p>
             <q-avatar color="white" text-color="primary">{{ email.charAt(0)}} </q-avatar>
           </template>
           <q-list>

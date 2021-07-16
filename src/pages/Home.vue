@@ -1,20 +1,20 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="q-pa-sm">
+    <div class="">
       <q-table
-        title="Contacts"
-        :data="data"
-        :filter="filterItem"
+        title="Users List"
+        :data="users"
+        filter=""
         :columns="columns"
         row-key="name"
-        selection="multiple"
+        selection="single"
         :selected.sync="selected"
-        :loading="loadingContacts"
+        :loading="loading"
         :pagination.sync="pagination"
         hide-selected-banner
-        no-data-label="No Contacts Available"
+        no-data-label="No Users Available"
         no-results-label="Sorry could not uncover any results"
-        style="max-height: 800px"
+        style="max-height: 770px"
       >
         <!--          table loading data-->
         <template v-slot:loading>
@@ -22,7 +22,7 @@
         </template>
 
         <!--          table top slot-->
-        <template v-slot:top="props">
+        <template v-slot:top-right="props">
           <template v-if="selected.length">
             <div class="action-buttons">
               <q-badge class="q-ml-sm" size="xs" v-model="props.selected" :label="selected.length" />
@@ -64,29 +64,48 @@
             <q-td >
               <q-checkbox size="xs" v-model="props.selected"/>
             </q-td>
-            <q-td key="name" :props="props">
-              <q-avatar size="sm" class="q-mr-xs" v-if="!props.row.avatar">
-                <q-icon size="sm" name="face" />
-              </q-avatar>
-              <q-avatar size="sm" class="q-mr-xs" v-else>
-                <img :src="props.row.avatar">
-              </q-avatar>
-              {{ props.row.name }}
-            </q-td>
             <template v-for="col in props.cols">
-              <q-td v-if="col.name !== 'name'" :key="col.name">
+              <q-td v-if="col.name === 'id'" :key="col.name">
+                {{ props.row[col.name] }}
+              </q-td>
+              <q-td v-if="col.name === 'name'" :key="col.name">
+                <q-avatar size="sm" class="q-mr-xs" v-if="!props.row.avatar">
+                  <q-icon size="sm" name="face" />
+                </q-avatar>
+                <q-avatar size="sm" class="q-mr-xs" v-else>
+                  <q-img :src="props.row.avatar" />
+                </q-avatar>
+                {{ props.row.name }}
+              </q-td>
+              <q-td v-if="col.name === 'email'" :key="col.name">
+                {{ props.row[col.name] }}
+              </q-td>
+              <q-td v-if="col.name !== 'id' && col.name !== 'name' && col.name !== 'email'" :key="col.name">
                 {{ props.row[col.name] }}
               </q-td>
             </template>
           </q-tr>
         </template>
       </q-table>
+      <div class="row justify-center q-mt-md">
+        <q-pagination
+          v-model="pagination.page"
+          :max="pagesNumber"
+          color="teal"
+          size="md"
+          direction-links
+          boundary-links
+          icon-first="skip_previous"
+          icon-last="skip_next"
+          icon-prev="fast_rewind"
+          icon-next="fast_forward"
+        />
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import axios from 'src/boot/axios';
 export default {
 name: "Home",
   data () {
@@ -95,147 +114,36 @@ name: "Home",
       pagination: {
         sortBy: 'desc',
         descending: false,
-        page: 1,
-        rowsPerPage: 20
+        page: 2,
+        rowsPerPage: 25
         // rowsNumber: xx if getting data from a server
       },
       columns: [
+        { name: 'id', required: true, label: 'Id', align: 'left', field: row => row.name, sortable: true },
         { name: 'name', required: true, label: 'Name', align: 'left', field: row => row.name, sortable: true },
-        { name: 'email', align: 'left', label: 'Email', field: 'email', sortable: true },
-        { name: 'companyName', align: 'left', label: 'Company Name', field: 'companyName', sortable: true },
-        { name: 'role', align: 'left', label: 'Role', field: 'role' },
-        { name: 'forecast', align: 'left', label: 'Forecast (%)', field: 'forecast' },
-        { name: 'recentAct', align: 'left', label: 'Recent Activity', field: 'recentAct' }
+        { name: 'email', align: 'left', label: 'Email', field: row => row.name, sortable: true },
+        { name: 'occupation', align: 'left', label: 'Occupation', field: row => row.name, sortable: true },
+        { name: 'updated_at', align: 'left', label: 'Updated At', field: row => row.name, sortable: true }
       ],
-      columnss: [
-        {
-          name: 'name',
-          required: true,
-          label: 'Dessert (100g serving)',
-          align: 'left',
-          field: row => row.name,
-          format: val => `${val}`,
-          sortable: true
-        },
-        { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-        { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-        { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-        { name: 'protein', label: 'Protein (g)', field: 'protein' },
-        { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-        { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-        { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-      ],
-      data: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%'
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          sodium: 129,
-          calcium: '8%',
-          iron: '1%'
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          sodium: 337,
-          calcium: '6%',
-          iron: '7%'
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          sodium: 413,
-          calcium: '3%',
-          iron: '8%'
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          sodium: 327,
-          calcium: '7%',
-          iron: '16%'
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          sodium: 50,
-          calcium: '0%',
-          iron: '0%'
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          sodium: 38,
-          calcium: '0%',
-          iron: '2%'
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          sodium: 562,
-          calcium: '0%',
-          iron: '45%'
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          sodium: 326,
-          calcium: '2%',
-          iron: '22%'
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          sodium: 54,
-          calcium: '12%',
-          iron: '6%'
-        }
-      ]
     }
   },
-  created() {
-  axios.get('https://ti-react-test.herokuapp.com/users')
-    .then(response => console.log(response.data))
-    .catch(err =>  console.log(err))
+  mounted () {
+  setTimeout(() => {
+    this.$store.dispatch('user/fetchUsers')
+  }, 1000)
   },
   methods: {
-
+  },
+  computed: {
+    users() {
+      return this.$store.getters['user/getUsers']
+    },
+    loading() {
+      return this.$store.getters['user/loadingUsers']
+    },
+    pagesNumber () {
+      return Math.ceil(this.users.length / this.pagination.rowsPerPage)
+    }
   }
 }
 </script>
