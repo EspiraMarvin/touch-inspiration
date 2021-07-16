@@ -130,11 +130,11 @@
             </q-form>
           </q-card-section>
           <q-card-actions align="right" v-if="!viewing">
-              <q-btn color="info" class="q-pl-md q-pr-md" outline label="Cancel" v-close-popup />
-              <q-btn label="Save" color="primary" class="q-pl-md q-pr-md" @click="btnSave" />
+              <q-btn color="info" class="q-pl-md q-pr-md"  unelevated label="Cancel" v-close-popup />
+              <q-btn label="Save" color="primary" class="q-pl-md q-pr-md" unelevated @click="btnSave" />
           </q-card-actions>
           <q-card-actions align="right" v-else>
-            <q-btn label="Close" color="primary" class="q-pl-md q-pr-md" v-close-popup />
+            <q-btn label="Close" color="primary" class="q-pl-md q-pr-md" unelevated v-close-popup />
           </q-card-actions>
 
         </q-card>
@@ -146,7 +146,7 @@
 <script>
 import mixins from "src/mixins/mixins";
 import moment from 'moment'
-import {cloneDeep, isEqual } from "lodash";
+import {cloneDeep, isMatch } from "lodash";
 export default {
 name: "Home",
   mixins: [ mixins ],
@@ -188,7 +188,7 @@ name: "Home",
       this.userForm.created_at = moment(row2.created_at).format('DD-MM-YYYY HH:mm:ss');
       this.userForm.updated_at = moment(row2.updated_at).format('DD-MM-YYYY HH:mm:ss');
       this.openDialog = true
-      this.dialogTitle = `Editting ${row2.name}`
+      this.dialogTitle = `Editing ${row2.name}`
       this.originalFormData = row2
     },
     viewUser(row) {
@@ -203,21 +203,15 @@ name: "Home",
       this.dialogTitle = `${row.name} Details`
     },
     btnSave () {
-      // prevent submitting uneditted data to the api
-      console.log(this.originalFormData)
-      console.log(this.userForm)
-      console.log('1')
-      console.log(isEqual(this.originalFormData.name, this.userForm.name))
-      if (!isEqual(this.originalFormData.name, this.userForm.name) && !isEqual(this.originalFormData.email, this.userForm.email)
-      && !isEqual(this.originalFormData.occupation, this.userForm.occupation) && !isEqual(this.originalFormData.bio, this.userForm.bio)) {
-        console.log('2')
+      // prevent submitting un-edited data to the api
+      let c = cloneDeep(this.userForm)
+      if(isMatch(this.originalFormData.name, c.name) && isMatch(this.originalFormData.email, c.email)
+      && isMatch(this.originalFormData.bio, c.bio) && isMatch(this.originalFormData.occupation, c.occupation)){
+        this.openDialog = false
+      }else {
         this.$store.dispatch('user/SaveUpdatedUserDetails', this.userForm)
-        console.log('3')
-      } else if(!isEqual(this.originalFormData, this.userForm)){
-        console.log('4')
         this.openDialog = false
       }
-      console.log('5')
     }
   },
   computed: {
