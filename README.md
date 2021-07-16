@@ -1,15 +1,15 @@
-# Quasar App (quasar-firebase-app)
+#Touch Inspiration App
 
-A Quasar Framework app
+### Done in Vuejs, Vuex and Firebase
 
 ## Install the dependencies
 ```bash
-yarn
+yarn / yarn instal
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
-quasar dev
+quasar dev / yarn dev
 ```
 
 ### Lint the files
@@ -19,7 +19,7 @@ yarn run lint
 
 ### Build the app for production
 ```bash
-quasar build
+quasar build / yarn build
 ```
 
 ### Customize the configuration
