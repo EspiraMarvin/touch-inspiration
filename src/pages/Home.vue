@@ -11,7 +11,7 @@
         :pagination.sync="pagination"
         hide-pagination
         no-results-label="Sorry could not uncover any results"
-        style="max-height: 770px"
+        style="max-height: 790px"
       >
         <!--          table top slot-->
         <template v-slot:top-right>
@@ -155,7 +155,7 @@ name: "Home",
       openDialog: false,
       moment: moment,
       filter: '',
-      pagination: { sortBy: 'desc', descending: false, page: 2, rowsPerPage: 25 },
+      pagination: { sortBy: 'desc', descending: false, page: 1, rowsPerPage: 25 },
       dialogTitle: '',
       viewing: false,
       editing: false,
