@@ -105,6 +105,7 @@
               <div class="col-md-6 col-xs-12 q-pa-md">
                 <q-input
                   standard
+                  autogrow
                   v-model="userForm.bio"
                   placeholder="Role *"
                   type="text" hint="Bio"
